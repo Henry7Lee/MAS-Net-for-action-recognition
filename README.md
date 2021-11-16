@@ -1,13 +1,21 @@
 
 # MAS-Net for action recognition
-## Overview
+
 We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net). This code is based on the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase. The core code to implement the MAS-Net are `ops/MASNet.py`
 
 **[Nov 16, 2021]** Submitted in **CVPR 2022**.
 
 **[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
 
-* [Model](#model)
+## Overview
+#### MAS-Net: 
+<img src="./imgs/MAS-Net.png" width="800px" />
+
+#### MAM & MSM: 
+<img src="./imgs/Module.png" width="500px"  />
+
+# Content
+* [Prerequisites](#prerequisites)
 * [Dataset](#dataset)
 * [Training](#training)
 * [Testing](#testing)  
@@ -20,13 +28,14 @@ We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net
   - [References](#references)
   - [License](#license)
   - [Contact](#contact)
+  
+## Prerequisites
+The code is built with following libraries:
 
-## Model
-### MAS-Net: 
-<img src="./imgs/MAS-Net.png" width="800px" />
-
-### MAM & MSM: 
-<img src="./imgs/Module.png" width="500px"  />
+- [PyTorch](https://pytorch.org/) 1.0 or higher
+- [TensorboardX](https://github.com/lanpa/tensorboardX)
+- [tqdm](https://github.com/tqdm/tqdm.git)
+- [scikit-learn](https://scikit-learn.org/stable/)
 
 
 ## Dataset
@@ -94,13 +103,14 @@ python CAM.py
 ![CAM](./imgs/CAM_result.png)
 
 ## Other Info
-
 ### Citation
+None
 
 ### References
 We especially thank the contributors of the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase for providing helpful code.
 
 ### License
+None
 
 ### Contact
 657786844@qq.com
