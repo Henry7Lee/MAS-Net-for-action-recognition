@@ -22,31 +22,31 @@ def main():
 	global args, best_prec1
 	args = parser.parse_args()
 
-	#创建文件夹
+	# create folder
 	check_rootfolders()
 
-	#存储的训练好的模型的名字
+	# store_name
 	global store_name,checkpoint_dir
 	checkpoint_dir = os.path.join("experiments", args.dataset, args.type, args.arch, "num_segments_" + str(args.num_segments), args.store_name)
 	store_name = '_'.join([args.type, args.dataset, args.arch, 'segment%d'% args.num_segments,args.store_name])
 	print(('storing name: ' + store_name))
 
+	# log_name
 	log_training = open(os.path.join(checkpoint_dir, args.root_log, '%s.txt'%store_name), 'a')
 	log_training.write("[ "+str(datetime.now()).split(".")[0]+" ]\n")  #打印时间
 
-	#保存超参数
+	# Save hyper parameters
 	with open(os.path.join(checkpoint_dir, args.root_log, 'args.txt'), 'w') as f:
 		f.write(str(args))
 
-	#tensorboardX作图
+	# tensorboardX
 	tf_writer = SummaryWriter(log_dir=os.path.join(checkpoint_dir, "tensorboardX"))
 
-	#对Something-something数据集进行预处理。
+	# get dataset list
 	categories, train_list, val_list, root_path, prefix = datasets_video.return_dataset(args.dataset, args.dataset_path)
 	num_class = len(categories)
 
-
-	#构建网络
+	# create MASNet
 	model = TemporalModel(num_class, num_segments=args.num_segments, base_model = args.type, backbone=args.arch,
 						dropout = args.dropout)
 
@@ -56,10 +56,11 @@ def main():
 	input_std = model.input_std
 	policies = model.get_optim_policies()
 
+	# Something-something Dataset part label reverse
 	train_augmentation = model.get_augmentation(
 		flip=False if 'something' in args.dataset else True)
 
-	#参数输出
+	# print params
 	for group in policies:
 		print(('[MASNet-{}] group: {} has {} params, lr_mult: {}, decay_mult: {}'.format(
 			args.arch,group['name'], len(group['params']), group['lr_mult'], group['decay_mult'])))
@@ -67,12 +68,11 @@ def main():
 			args.arch,group['name'], len(group['params']), group['lr_mult'], group['decay_mult'])))
 
 
-	# 使用单机多卡进行训练
-	#model = torch.nn.DataParallel(model, device_ids=args.gpus).cuda()
+	# gpus
 	if torch.cuda.is_available():
 		model = nn.DataParallel(model,device_ids=args.gpus).cuda()
 
-	# 用于中断训练后继续训练
+	# resume
 	if args.resume:
 		if os.path.isfile(args.resume):
 			log_training.write("=> loading checkpoint '{}'\n".format(args.resume))
@@ -133,15 +133,10 @@ def main():
 		data_length = 5
 	'''
 
-	#归一化
+	# normalize
 	normalize = GroupNormalize(input_mean, input_std)
 
-	# torch.utils.data.Dataset类型的数据并不能作为模型的输入，还要通过torch.utils.data.DataLoader类进一步封装，
-	# 这是因为数据读取类TSNDataSet返回两个值，第一个值是Tensor类型的数据，第二个值是int型的标签，
-	# 而torch.utils.data.DataLoader类是将batch size个数据和标签分别封装成一个Tensor，从而组成一个长度为2的list
-
-
-
+	#load set
 	train_loader = torch.utils.data.DataLoader(
 		TSNDataSet(dataset=args.dataset, root_path=root_path, list_file=train_list, num_segments=args.num_segments,
 							   new_length=1,
@@ -177,14 +172,13 @@ def main():
 
 	# define loss function (criterion) and optimizer
 	# 交叉熵损失
-
 	criterion = torch.nn.CrossEntropyLoss().cuda()
-	#优化器
+
 	optimizer = torch.optim.SGD(policies,
 								args.lr,
 								momentum=args.momentum,
 								weight_decay=args.weight_decay)
-	#验证
+	#evaluate
 	if args.evaluate:
 		log_training.write("***********Using Evaluate Mode***********\n")
 		validate(val_loader, model, criterion, 0,log=log_training)
@@ -235,9 +229,9 @@ def main():
 
 
 		log_training.write("********************************\n")
-	log_training.write("[ "+str(datetime.now()).split(".")[0]+" ]\n\n")  #打印时间
+	log_training.write("[ "+str(datetime.now()).split(".")[0]+" ]\n\n")  #print time
 
-
+# train
 def train(train_loader, model, criterion, optimizer, epoch, log, tf_writer):
 	batch_time = AverageMeter()
 	data_time = AverageMeter()
@@ -291,14 +285,14 @@ def train(train_loader, model, criterion, optimizer, epoch, log, tf_writer):
 			if total_norm > args.clip_gradient:
 				print(("clipping gradient: {} with coef {}".format(total_norm, args.clip_gradient / total_norm)))
 
-		#模型参数更新
+		# parameter update
 		optimizer.step()
 
 		# measure elapsed time
 		batch_time.update(time.time() - end)
 		end = time.time()
 
-		if i % args.print_freq == 0: #每20次迭代打印一次
+		if i % args.print_freq == 0: #Print it every 20 epochs
 			output = ('Epoch: [{0}][{1}/{2}], lr: {lr:.5f}\t'
 					'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
 					'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
@@ -384,7 +378,10 @@ def validate(val_loader, model, criterion, epoch, log=None, tf_writer=None):
 
 def save_checkpoint(state, is_best,epoch):
 	filename = os.path.join(checkpoint_dir,args.root_checkpoint, store_name+'_'+str(epoch)+'_checkpoint.pth.tar')
-	torch.save(state, filename)
+	if float(torch.__version__[:3])>=1.6:
+		torch.save(state, filename, _use_new_zipfile_serialization=False)
+	else:
+		torch.save(state, filename)
 	if is_best:
 		shutil.copyfile(filename, filename.replace('pth.tar', 'best.pth.tar'))
 
@@ -415,6 +412,19 @@ def adjust_learning_rate(optimizer, epoch, lr_type, lr_steps):
 		lr = args.lr * decay
 		decay = args.weight_decay
 
+	elif lr_type == 'MAS_lr':
+		if len(lr_steps)==4:
+			decay = 0.1 ** (sum(epoch >= np.array(lr_steps[:2])))
+			lr = args.lr * decay
+			if epoch >= np.array(lr_steps[2]):
+				lr = lr * 0.5
+				if epoch >= np.array(lr_steps[3]):
+					lr = lr * 0.2
+		else:
+			decay = 0.1 ** (sum(epoch >= np.array(lr_steps)))
+			lr = args.lr * decay
+		decay = args.weight_decay
+
 	elif lr_type == 'cos_lr':
 		import math
 		lr = 0.5 * args.lr * (1 + math.cos(math.pi * epoch / args.epochs))
@@ -443,45 +453,22 @@ def accuracy(output, target, topk=(1,)):
 
 def check_rootfolders():
 	"""Create log and model folder"""
-	folders_util = ["experiments",
-					os.path.join("experiments", args.dataset),
-					os.path.join("experiments", args.dataset, args.type),
-					os.path.join("experiments", args.dataset, args.type, args.arch, ),
+	folders_util = [
 					os.path.join("experiments", args.dataset, args.type, args.arch,
-								 "num_segments_" + str(args.num_segments)),
+								 "num_segments_" + str(args.num_segments), args.store_name,
+								 args.root_log),
 					os.path.join("experiments", args.dataset, args.type, args.arch,
-								 "num_segments_" + str(args.num_segments), args.store_name),
+								 "num_segments_" + str(args.num_segments), args.store_name,
+								 'tensorboardX'),
 					os.path.join("experiments", args.dataset, args.type, args.arch,
-								 "num_segments_" + str(args.num_segments), args.store_name,args.root_log),
-					os.path.join("experiments", args.dataset, args.type, args.arch,
-								 "num_segments_" + str(args.num_segments), args.store_name, 'tensorboardX'),
-					os.path.join("experiments", args.dataset, args.type, args.arch,
-								 "num_segments_" + str(args.num_segments), args.store_name,args.root_checkpoint)]
+								 "num_segments_" + str(args.num_segments), args.store_name,
+								 args.root_checkpoint)
+					]
 
 	for folder in folders_util:
 		if not os.path.exists(folder):
 			print(('creating folder ' + folder))
-			os.mkdir(folder)
-
-# Custom Contrastive Loss
-class ContrastiveLoss(torch.nn.Module):
-	"""
-	Contrastive loss function.
-	Based on: http://yann.lecun.com/exdb/publis/pdf/hadsell-chopra-lecun-06.pdf
-	"""
-
-	def __init__(self, margin=2.0):
-		super(ContrastiveLoss, self).__init__()
-		self.margin = margin
-
-	def forward(self, output1, output2, label):
-		euclidean_distance = F.pairwise_distance(output1, output2)
-		loss_contrastive = torch.mean((1 - label) * torch.pow(euclidean_distance, 2) +  # calmp夹断用法
-									  (label) * torch.pow(torch.clamp(self.margin - euclidean_distance, min=0.0),
-														  2))
-
-		return loss_contrastive
-
+			os.makedirs(folder)
 
 
 if __name__ == '__main__':

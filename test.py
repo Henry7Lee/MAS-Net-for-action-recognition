@@ -15,36 +15,32 @@ from torch.nn import functional as F
 import os
 
 def main():
-    os.environ["CUDA_VISIBLE_DEVICES"] = '0'
-
     # options
-    parser = argparse.ArgumentParser(description="TSM testing on the full validation set")
-    parser.add_argument('--dataset', type=str,default ='somethingv2')
+    parser = argparse.ArgumentParser(description="MASNet testing on the full validation set")
+    parser.add_argument('--dataset', type=str,default ='somethingv1') #somethingv1 #somethingv2 #kinetics
     parser.add_argument('--dataset_path', type = str, default = '../')
 
     # may contain splits
-    #parser.add_argument('--weights', type=str, default="./experiments/test/v1_8/my_resnet_somethingv1_resnet50_segment8_summap_sk[r4,g4]_tim_2d_48_checkpoint.best.pth.tar")
+    #parser.add_argument('--weights', type=str, default="./experiments/test/v1_8/MASNet_somethingv1_resnet50_segment8_checkpoint.best.pth.tar")
 
-    #parser.add_argument('--weights', type=str, default="./experiments/test/v1_16/my_resnet_somethingv1_resnet50_segment16_summap_sk[r4,g4]_tim_2d_91_checkpoint.best.pth.tar")
+    parser.add_argument('--weights', type=str, default="./experiments/test/v1_16/MASNet_somethingv1_resnet50_segment16_checkpoint.best.pth.tar")
 
+    #parser.add_argument('--weights', type=str, default="./experiments/test/v2_8/MASNet_somethingv2_resnet50_segment8_checkpoint.best.pth.tar")
+    #parser.add_argument('--weights', type=str, default="./experiments/test/v2_16/MASNet_somethingv2_resnet50_segment16_checkpoint.best.pth.tar")
 
-    parser.add_argument('--weights', type=str, default="./experiments/test/v2_8/my_resnet_somethingv2_resnet50_segment8_sum_sk_tim_2d_53_checkpoint.best.pth.tar")
-    #parser.add_argument('--weights', type=str, default="./experiments/test/v2_16/my_resnet_somethingv2_resnet50_segment16_summap_sk[r4,g8]_tim_2d[dropout0.8]_57_checkpoint.best.pth.tar")
+    parser.add_argument('--test_segments', type=int, default=16)
 
+    parser.add_argument('--dense_sample_num', type=int, default=10)
+    parser.add_argument('--dense_sample', default=True, action="store_true", help='use dense sample as I3D')
 
-    parser.add_argument('--test_segments', type=str, default=8)
-
-    parser.add_argument('--dense_sample', default=False, action="store_true", help='use dense sample as I3D')
     parser.add_argument('--twice_sample', default=True, action="store_true", help='use twice sample for ensemble')
     parser.add_argument('--test_crops', type=int, default=3)
-
-
     parser.add_argument('--full_res', default=True, action="store_true",
                         help='use full resolution 256x256 for test as in Non-local I3D')
 
     parser.add_argument('--coeff', type=str, default=None)
-    parser.add_argument('--batch_size', type=int, default=4)
-    parser.add_argument('-j', '--workers', default=1, type=int, metavar='N',
+    parser.add_argument('--batch_size', type=int, default=1)
+    parser.add_argument('-j', '--workers', default=6, type=int, metavar='N',
                         help='number of data loading workers (default: 8)')
 
     # for true test
@@ -58,14 +54,13 @@ def main():
 
     parser.add_argument('--max_num', type=int, default=-1)
     parser.add_argument('--input_size', type=int, default=224)
-
-
+    parser.add_argument('--gpus', nargs='+', type=int, default=[0,1,2,3])
 
     args = parser.parse_args()
 
 
     if args.dense_sample is True and args.twice_sample is False:
-        clips = 10
+        clips = args.dense_sample_num
     elif args.twice_sample is True and args.dense_sample is False:
         clips = 2
     elif args.dense_sample is True and args.twice_sample is True:
@@ -190,12 +185,17 @@ def main():
                            Stack(roll=False),
                            ToTorchFormatTensor(div=True),
                            GroupNormalize(net.input_mean, net.input_std),
-                       ]), dense_sample=args.dense_sample, twice_sample=args.twice_sample),
+                       ]), dense_sample=args.dense_sample,
+                       dense_sample_num=args.dense_sample_num,
+                       twice_sample=args.twice_sample),
             batch_size=args.batch_size, shuffle=False,
             num_workers=args.workers, pin_memory=True,
         )
 
-        net = torch.nn.DataParallel(net.cuda())
+        #net = torch.nn.DataParallel(net.cuda())
+        if torch.cuda.is_available():
+            net = torch.nn.DataParallel(net, device_ids=args.gpus).cuda()
+
         checkpoint = torch.load(this_weights)
         e_ = checkpoint['epoch']
         print("=> loaded checkpoint, (epoch {})".format(e_))
@@ -222,11 +222,12 @@ def main():
             i, data, label = video_data
             batch_size = label.numel()
             num_crop = args.test_crops
-            if args.dense_sample:
-                num_crop *= 10  # 10 clips for testing when using dense sample
 
             if args.twice_sample:
                 num_crop *= 2
+
+            if args.dense_sample:
+                num_crop *= args.dense_sample_num  # 10 clips for testing when using dense sample
 
 
             if modality == 'RGB' :
@@ -238,7 +239,7 @@ def main():
             else:
                 raise ValueError("Unknown modality " + modality)
             # nt3, c, h, w
-            data_in = data.view(-1, length, data.size(-2), data.size(-1))
+            data_in = data.view(-1, length*this_test_segments, data.size(-2), data.size(-1))
             rst = net(data_in)
             rst = rst.reshape(batch_size, num_crop, -1).mean(1)  # n, num_classes
 
@@ -363,6 +364,8 @@ def main():
                 reorder_label[i] = video_labels[i]
                 reorder_pred[i] = video_pred[i]
             save_path = "./experiments/test/EN/"
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
             save_name = args.dataset+'_segment'+str(args.test_segments)+'_crops'+str(args.test_crops) + '_clips' + str(clips) + '_shape' + str(input_size_log) + '.npz'
             np.savez(save_path+save_name, scores=reorder_output, labels=reorder_label, predictions=reorder_pred, cf=cf)
 
