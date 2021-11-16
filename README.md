@@ -14,7 +14,7 @@ We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net
 #### MAM & MSM: 
 <img src="./imgs/Module.png" width="500px"  />
 
-# Content
+## Content
 * [Prerequisites](#prerequisites)
 * [Dataset](#dataset)
 * [Training](#training)
