@@ -12,8 +12,15 @@ We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net
 * [Training](#training)
 * [Testing](#testing)  
 * [Results](#results)  
-* [Visualization](#visualization) 
- 
+  + [Something-Something](#something-something)
+  + [Kinetics-400](#kinetics-400)
+  + [Visualization](#visualization)
+* [Other Info](#other-info)  
+  - [Citation](#citation)
+  - [References](#references)
+  - [License](#license)
+  - [Contact](#contact)
+
 ## Model
 ### MAS-Net: 
 <img src="./imgs/MAS-Net.png" width="800px" />
@@ -27,7 +34,7 @@ In our paper, we conduct experiments on Something-Something V1&V2 and Kinetics-4
 
 ## Training
 Please refer to `scripts/train.sh`, more details can be found in the appendix of our paper.
-- For example, to train MAS-ResNet50 on Something-Something-V1 with 4 gpus, you can run:
+- For example, to train MAS-Net_8f basd on ResNet50 on Something-Something-V1 with 4 gpus, you can run:
 ```
 python main.py --lr 0.01 --epochs 70 --dataset_path ../../datasets/ --dataset somethingv1 \
                 --arch resnet50 --num_segments 8 --store_name MAS_Net[v1_8] \
@@ -78,8 +85,7 @@ Model  | Frames x Crops x Clips   |GFLOPs |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5 
 :--: | :--: | :--: | :--:|  :--:|
 MAS-ResNet50_16F    | 16 x 3 x 10 |  67 x 30  |&nbsp; 75.7%  |&nbsp; 92.6%  
 
-
-## Visualization
+### Visualization
 We visualize the class activation maps with Grad-CAM，if you want to observe the visualization results，you can run：
 ```
 python CAM.py
@@ -89,13 +95,12 @@ python CAM.py
 
 ## Other Info
 
-### Contact
-657786844@qq.com
+### Citation
 
 ### References
 We especially thank the contributors of the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase for providing helpful code.
 
 ### License
 
-### Citation
-
+### Contact
+657786844@qq.com
