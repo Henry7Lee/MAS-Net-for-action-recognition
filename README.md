@@ -1,6 +1,5 @@
 
 # MAS-Net for action recognition
-
 ## Overview
 **[Nov 16, 2021]** Submitted in **CVPR 2022**.
 
@@ -8,9 +7,11 @@
 
 ## Model
 ### MAS-Net: 
-![img](./imgs/MAS-Net.png)
+<img src="./imgs/MAS-Net.png" width="800px" />
+
 ### MAM & MSM: 
-![img](./imgs/Module.png)
+<img src="./imgs/Module.png" width="500px"  />
+
 
 ## Dataset
 In our paper, we conduct experiments on Something-Something V1&V2 and Kinetics-400. Please refer to [TSM](https://github.com/mit-han-lab/temporal-shift-module) for the detailed guide of data pre-processing.
@@ -75,7 +76,7 @@ We visualize the class activation maps with Grad-CAM，if you want to observe th
 python CAM.py
 ```
     
-![img](./imgs/CAM_result.png)
+![CAM](./imgs/CAM_result.png)
 
 ## Contact
 657786844@qq.com
