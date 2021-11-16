@@ -34,37 +34,40 @@ MAS-ResNet50_16F    | 16 x 3 x 10 |&nbsp; 75.7%  |&nbsp; 92.6%
 ## Training
 Please refer to `scripts/train.sh`, more details can be found in the appendix of our paper.
 - For example, to train MAS-ResNet50 on Something-Something-V1 with 4 gpus, you can run:
-    ```
+```
 python main.py --lr 0.01 --epochs 70 --dataset_path ../../datasets/ --dataset somethingv1 \
                 --arch resnet50 --num_segments 8 --store_name MAS_Net[v1_8] \
                 --gpus 0 1 2 3 --workers 8 --batch-size 32 \
                 --dropout 0.5 --weight_decay 5e-4 \
                 --lr_type MAS_lr --lr_steps 30 40 50 60
-    ```
+```
 ## Testing
 Please refer to `scripts/test.sh` and our paper for more datails.
 - For center crop & single clip, you can run:
-    ```
+```
 python test.py --dataset somethingv1 --weights ./your.pth.tar --test_segments 8 --test_crops 1 --batch_size 32 -j 8
-    ```
-- For 3 crops & 2 clips, you can run:
-    ```
-python test.py --dataset somethingv1 --weights ./your.pth.tar --test_segments 8 --test_crops 3 --batch_size 8 -j 8 --full_res --twice_sample
+```
 
-    ```    
+- For 3 crops & 2 clips, you can run:
+```
+python test.py --dataset somethingv1 --weights ./your.pth.tar --test_segments 8 --test_crops 3 --batch_size 8 -j 8 --full_res --twice_sample
+```    
+
 - For 3 crops & 10 clips, you can run:
-    ```
+```
 python test.py --dataset somethingv1 --weights ./your.pth.tar --test_segments 8 --test_crops 3 --batch_size 2 -j 8 --full_res --dense_sample --dense_sample_num 10
-    ```   
+```   
+
 - if you want to get the result of ensemble, you can run:
-    ```
+```
 python average_scores.py
-    ```    
+```    
+
 ## Visualization
-We realized the visualization based on Grad-CAM，if you want to observe the visualization results，you can run：
-    ```
+We visualize the class activation maps with Grad-CAM，if you want to observe the visualization results，you can run：
+```
 python CAM.py
-    ```
+```
     
 ![img](./img/CAM_result.png)
 
