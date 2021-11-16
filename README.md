@@ -1,7 +1,7 @@
 
 # MAS-Net for action recognition
 
-# Submitted in 2022 CVPR 
+## Submitted in 2022 CVPR 
 
 #### Something-Something:1-Crop & Center-Clip
 Model| Frames x 1Crop x 1Clip |V1-Top1 |V2-Top1| 
