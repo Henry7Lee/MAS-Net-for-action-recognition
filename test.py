@@ -31,16 +31,16 @@ def main():
     parser.add_argument('--test_segments', type=int, default=16)
 
     parser.add_argument('--dense_sample_num', type=int, default=10)
-    parser.add_argument('--dense_sample', default=True, action="store_true", help='use dense sample as I3D')
+    parser.add_argument('--dense_sample', default=False, action="store_true", help='use dense sample as I3D')
 
-    parser.add_argument('--twice_sample', default=True, action="store_true", help='use twice sample for ensemble')
-    parser.add_argument('--test_crops', type=int, default=3)
-    parser.add_argument('--full_res', default=True, action="store_true",
+    parser.add_argument('--twice_sample', default=False, action="store_true", help='use twice sample for ensemble')
+    parser.add_argument('--test_crops', type=int, default=1)
+    parser.add_argument('--full_res', default=False, action="store_true",
                         help='use full resolution 256x256 for test as in Non-local I3D')
 
     parser.add_argument('--coeff', type=str, default=None)
-    parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('-j', '--workers', default=6, type=int, metavar='N',
+    parser.add_argument('--batch_size', type=int, default=8)
+    parser.add_argument('-j', '--workers', default=0, type=int, metavar='N',
                         help='number of data loading workers (default: 8)')
 
     # for true test
