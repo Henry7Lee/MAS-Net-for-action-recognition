@@ -12,6 +12,7 @@ We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net
 * [Training](#training)
 * [Testing](#testing)  
 * [Results](#results)  
+* [Visualization](#visualization) 
  
 ## Model
 ### MAS-Net: 
