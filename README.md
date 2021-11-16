@@ -93,7 +93,7 @@ MAS-ResNet50_EN  | (8+16) x 3 x 2 | 101 x 6 | 55.4%  | 66.7%
 ### Kinetics-400:
 Model  | Frames x Crops x Clips   |GFLOPs |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
 :--: | :--: | :--: | :--:|  :--:|
-MAS-ResNet50_16F    | 16 x 3 x 10 |  67 x 30  |&nbsp; 75.7%  |&nbsp; 92.6%  
+MAS-ResNet50_16F    | 16 x 3 x 10 |  67 x 30  |75.7%  |92.6%  
 
 ### Visualization
 We visualize the class activation maps with Grad-CAM，if you want to observe the visualization results，you can run：
