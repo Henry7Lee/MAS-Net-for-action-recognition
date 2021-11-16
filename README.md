@@ -31,8 +31,9 @@ We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net
   
 ## Prerequisites
 The code is built with following libraries:
-
+- Python 3.6
 - [PyTorch](https://pytorch.org/) 1.0 or higher
+- [Torchvision](https://github.com/pytorch/vision)
 - [TensorboardX](https://github.com/lanpa/tensorboardX)
 - [tqdm](https://github.com/tqdm/tqdm.git)
 - [scikit-learn](https://scikit-learn.org/stable/)
