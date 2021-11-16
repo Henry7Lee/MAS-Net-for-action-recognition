@@ -6,6 +6,8 @@
 
 **[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
 
+![img](./imgs/Module.png)
+
 ## Dataset
 In our paper, we conduct experiments on Something-Something V1&V2 and Kinetics-400. Please refer to [TSM](https://github.com/mit-han-lab/temporal-shift-module) for the detailed guide of data pre-processing.
 
