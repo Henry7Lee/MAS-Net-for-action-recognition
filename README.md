@@ -6,7 +6,10 @@
 
 **[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
 
+## Model
+### MAS-Net: 
 ![img](./imgs/MAS-Net.png)
+### MAM & MSM: 
 ![img](./imgs/Module.png)
 
 ## Dataset
