@@ -1,6 +1,8 @@
 
 # MAS-Net for action recognition
 ## Overview
+We release the PyTorch code of the MAS-Net(Motion Accumulation and Selection Net). This code is based on the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase. The core code to implement the MAS-Net are `ops/MASNet.py`
+
 **[Nov 16, 2021]** Submitted in **CVPR 2022**.
 
 **[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
