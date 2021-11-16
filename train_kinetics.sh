@@ -1,1 +1,0 @@
-python main.py --lr 0.01 --epochs 100 --dataset_path ../../datasets/ --dataset kinetics  --type MASNet --arch resnet50 --num_segments 8 --store_name your_name --workers 12 --batch-size 32 --gpus 0 1 2 3 --lr_steps 50 75 90 --dropout 0.5 #--resume
