@@ -2,26 +2,19 @@
 Submitted in 2022 CVPR
 
 
-#### Something-Something-V1
-
-Model  | Frames x Crops x Clips  | Top-1  | Top-5 | 
+#### Something-Something
+Model  | Frames x Crop x Clip  |V1 Top-1 |V2 Top-1| 
 :--: | :--: | :--: | :--:| 
-MAS-ResNet50  | 8x1x1 | 52.3%  | 80.6% | 
-MAS-ResNet50  | 8x3x2 | 52.3%  | 80.6% | 
-MAS-ResNet50  | 16x1x1 | 53.9%  | 82.1% | 
-MAS-ResNet50  | 16x3x2 | 53.9%  | 82.1% | 
-
-#### Something-Something-V2
-
-Model  | Frames x Crops x Clips | Top-1  | Top-5 |
+MAS-ResNet50_8F  | 8x1x1      | 49.2%  | 61.5% | 
+MAS-ResNet50_16F | 16x1x1     | 51.9%  | 63.0% | 
+MAS-ResNet50_EN  | (8+16)x1x1 | 54.5%  | 65.1% | 
+Model  | Frames x CropS x ClipS  |V1 Top-1 |V2 Top-1| 
 :--: | :--: | :--: | :--:| 
-MAS-ResNet50  | 8x1x1   | 64.0%   | 88.8%  |
-MAS-ResNet50  | 8x3x2 | 52.3%  | 80.6% | 
-MAS-ResNet50  | 16x1x1  | 65.3%   | 89.7%  |
-MAS-ResNet50  | 16x3x2 | 53.9%  | 82.1% | 
+MAS-ResNet50_8F  | 8x3x2      | 51.1%  | 63.9% | 
+MAS-ResNet50_16F | 16x3x2     | 53.4%  | 65.1% | 
+MAS-ResNet50_EN  | (8+16)x3x2 | 55.4%  | 66.7% | 
 
-#### Kinetics400
+#### Kinetics-400
 Model  | Frames x Crops x Clips   | Top-1 | Top-5  |
 :--: | :--: | :--: | :--:| 
-MAS-ResNet50    | 8x3x10  | 76.6%  | 92.8%  | 
-MAS-ResNet50    | 16x3x10 | 77.5%  | 93.2%  |
+MAS-ResNet50    | 16x3x10 | 75.7%  | 92.6%  |
