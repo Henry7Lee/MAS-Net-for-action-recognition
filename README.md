@@ -18,6 +18,6 @@ MAS-ResNet50_16F | 16 x 3 x 2     | 53.4%  | 65.1%
 MAS-ResNet50_EN  | (8+16) x 3 x 2 | 55.4%  | 66.7%  
 
 #### Kinetics-400
-Model  | Frames x Crops x Clips   |&nbsp;   Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
+Model  | Frames x Crops x Clips   |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
 :--: | :--: | :--: | :--:| 
-MAS-ResNet50_16F    | 16x3x10 | 75.7%  | 92.6%  
+MAS-ResNet50_16F    | 16 x 3 x 10 |&nbsp; 75.7%  |&nbsp; 92.6%  
