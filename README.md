@@ -60,23 +60,23 @@ python average_scores.py
 ## Results
 ### Something-Something: 
 #### 1-Crop & Center-Clip
-Model| Frames x 1Crop x 1Clip |V1-Top1 |V2-Top1| 
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_8F  | 8 x 1 x 1      | 49.2%  | 61.5%  
-MAS-ResNet50_16F | 16 x 1 x 1     | 51.9%  | 63.0%  
-MAS-ResNet50_EN  | (8+16) x 1 x 1 | 54.5%  | 65.1%  
+Model| Frames x 1Crop x 1Clip |GFLOPs |V1-Top1 |V2-Top1| 
+:--: | :--: | :--: | :--:| :--:| 
+MAS-ResNet50_8F  | 8 x 1 x 1      | 34  | 49.2%  | 61.5%  
+MAS-ResNet50_16F | 16 x 1 x 1     | 67  | 51.9%  | 63.0%  
+MAS-ResNet50_EN  | (8+16) x 1 x 1 | 101 | 54.5%  | 65.1%  
 
 #### 3-Crops & 2-Clips
-Model| Frames x Crops x Clips |V1-Top1 |V2-Top1| 
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_8F  | 8 x 3 x 2      | 51.1%  | 63.9%  
-MAS-ResNet50_16F | 16 x 3 x 2     | 53.4%  | 65.1%  
-MAS-ResNet50_EN  | (8+16) x 3 x 2 | 55.4%  | 66.7%  
+Model| Frames x Crops x Clips |GFLOPs |V1-Top1 |V2-Top1| 
+:--: | :--: | :--: | :--:|  :--:|
+MAS-ResNet50_8F  | 8 x 3 x 2      | 34 x 6  | 51.1%  | 63.9%  
+MAS-ResNet50_16F | 16 x 3 x 2     | 67 x 6  | 53.4%  | 65.1%  
+MAS-ResNet50_EN  | (8+16) x 3 x 2 | 101 x 6 | 55.4%  | 66.7%  
 
 ### Kinetics-400:
-Model  | Frames x Crops x Clips   |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_16F    | 16 x 3 x 10 |&nbsp; 75.7%  |&nbsp; 92.6%  
+Model  | Frames x Crops x Clips   |GFLOPs |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
+:--: | :--: | :--: | :--:|  :--:|
+MAS-ResNet50_16F    | 16 x 3 x 10 |  67 x 30  |&nbsp; 75.7%  |&nbsp; 92.6%  
 
 
 ## Visualization
@@ -87,13 +87,15 @@ python CAM.py
     
 ![CAM](./imgs/CAM_result.png)
 
-## Contact
+## Other Info
+
+### Contact
 657786844@qq.com
 
-## Acknowledgements
+### References
 We especially thank the contributors of the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase for providing helpful code.
 
-## License
+### License
 
-## Citation
+### Citation
 
