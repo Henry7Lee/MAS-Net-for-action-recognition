@@ -9,28 +9,6 @@
 ## Dataset
 In our paper, we conduct experiments on Something-Something V1&V2 and Kinetics-400. Please refer to [TSM](https://github.com/mit-han-lab/temporal-shift-module) for the detailed guide of data pre-processing.
 
-
-## SOTA Results
-### Something-Something: 
-#### 1-Crop & Center-Clip
-Model| Frames x 1Crop x 1Clip |V1-Top1 |V2-Top1| 
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_8F  | 8 x 1 x 1      | 49.2%  | 61.5%  
-MAS-ResNet50_16F | 16 x 1 x 1     | 51.9%  | 63.0%  
-MAS-ResNet50_EN  | (8+16) x 1 x 1 | 54.5%  | 65.1%  
-
-#### 3-Crops & 2-Clips
-Model| Frames x Crops x Clips |V1-Top1 |V2-Top1| 
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_8F  | 8 x 3 x 2      | 51.1%  | 63.9%  
-MAS-ResNet50_16F | 16 x 3 x 2     | 53.4%  | 65.1%  
-MAS-ResNet50_EN  | (8+16) x 3 x 2 | 55.4%  | 66.7%  
-
-### Kinetics-400:
-Model  | Frames x Crops x Clips   |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
-:--: | :--: | :--: | :--:| 
-MAS-ResNet50_16F    | 16 x 3 x 10 |&nbsp; 75.7%  |&nbsp; 92.6%  
-
 ## Training
 Please refer to `scripts/train.sh`, more details can be found in the appendix of our paper.
 - For example, to train MAS-ResNet50 on Something-Something-V1 with 4 gpus, you can run:
@@ -62,6 +40,28 @@ python test.py --dataset somethingv1 --weights ./your.pth.tar --test_segments 8 
 ```
 python average_scores.py
 ```    
+
+## Results
+### Something-Something: 
+#### 1-Crop & Center-Clip
+Model| Frames x 1Crop x 1Clip |V1-Top1 |V2-Top1| 
+:--: | :--: | :--: | :--:| 
+MAS-ResNet50_8F  | 8 x 1 x 1      | 49.2%  | 61.5%  
+MAS-ResNet50_16F | 16 x 1 x 1     | 51.9%  | 63.0%  
+MAS-ResNet50_EN  | (8+16) x 1 x 1 | 54.5%  | 65.1%  
+
+#### 3-Crops & 2-Clips
+Model| Frames x Crops x Clips |V1-Top1 |V2-Top1| 
+:--: | :--: | :--: | :--:| 
+MAS-ResNet50_8F  | 8 x 3 x 2      | 51.1%  | 63.9%  
+MAS-ResNet50_16F | 16 x 3 x 2     | 53.4%  | 65.1%  
+MAS-ResNet50_EN  | (8+16) x 3 x 2 | 55.4%  | 66.7%  
+
+### Kinetics-400:
+Model  | Frames x Crops x Clips   |&nbsp; Top-1 &nbsp;  | &nbsp;  Top-5  &nbsp;  |
+:--: | :--: | :--: | :--:| 
+MAS-ResNet50_16F    | 16 x 3 x 10 |&nbsp; 75.7%  |&nbsp; 92.6%  
+
 
 ## Visualization
 We visualize the class activation maps with Grad-CAM，if you want to observe the visualization results，you can run：
