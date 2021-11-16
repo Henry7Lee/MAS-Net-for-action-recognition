@@ -1,8 +1,11 @@
 
 # MAS-Net for action recognition
 
-## Submitted in 2022 CVPR 
+**[Nov 16, 2021]** Submitted in **CVPR 2022**.
+**[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
 
+
+## SOTA
 ### Something-Something: 
 #### 1-Crop & Center-Clip
 Model| Frames x 1Crop x 1Clip |V1-Top1 |V2-Top1| 
