@@ -6,6 +6,7 @@
 
 **[Nov 16, 2021]** We have released the PyTorch code of **MAS-Net**.
 
+![img](./imgs/MAS-Net.png)
 ![img](./imgs/Module.png)
 
 ## Dataset
