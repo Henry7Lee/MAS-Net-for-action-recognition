@@ -69,7 +69,7 @@ We visualize the class activation maps with Grad-CAM，if you want to observe th
 python CAM.py
 ```
     
-![img](./img/CAM_result.png)
+![img](./imgs/CAM_result.png)
 
 ## Contact
 657786844@qq.com
