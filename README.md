@@ -92,3 +92,8 @@ python CAM.py
 
 ## Acknowledgements
 We especially thank the contributors of the [TSN](https://github.com/yjxiong/tsn-pytorch) and [TSM](https://github.com/mit-han-lab/temporal-shift-module) codebase for providing helpful code.
+
+## License
+
+## Citation
+
