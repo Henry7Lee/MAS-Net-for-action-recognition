@@ -77,11 +77,11 @@ python average_scores.py
 ## Results
 ### Something-Something: 
 #### 1-Crop & Center-Clip
-Model| Frames x 1Crop x 1Clip |GFLOPs |V1-Top1 |V2-Top1| 
-:--: | :--: | :--: | :--:| :--:| 
-MAS-ResNet50_8F  | 8 x 1 x 1      | 34  | 49.2%  | 61.5%  
-MAS-ResNet50_16F | 16 x 1 x 1     | 67  | 51.9%  | 63.0%  
-MAS-ResNet50_EN  | (8+16) x 1 x 1 | 101 | 54.5%  | 65.1%  
+Model| Frames x 1Crop x 1Clip |GFLOPs |V1-Top1 |V2-Top1 | checkpoint|
+:--: | :--: | :--: | :--:| :--:| :--:
+MAS-ResNet50_8F  | 8 x 1 x 1      | 34  | 49.2%  | 61.5%  | [V1 ](https://www.jianguoyun.com/c/dl-file/checkpoint/MASNet_somethingv1_resnet50_segment8.pth.tar?dt=r2pbpc&kv=NjU3Nzg2ODQ0QHFxLmNvbQ&sd=cih0q&ud=3-zp-IWMgB3Wxojxt7RzLyfyqUIC3a1hmWO2uyA_52U&vr=3)  &nbsp;  [V2](https://www.jianguoyun.com/c/dl-file/checkpoint/MASNet_somethingv2_resnet50_segment8.pth.tar?dt=r2pbqh&kv=NjU3Nzg2ODQ0QHFxLmNvbQ&sd=cih0q&ud=gz0rI8Dx3pJyMTJ-5Ps9IcMO-jvqwZZY-jBpktZizys&vr=3)
+MAS-ResNet50_16F | 16 x 1 x 1     | 67  | 51.9%  | 63.0%  | [V1 ](https://www.jianguoyun.com/c/dl-file/checkpoint/MASNet_somethingv1_resnet50_segment16.pth.tar?dt=r2pbsr&kv=NjU3Nzg2ODQ0QHFxLmNvbQ&sd=cih0q&ud=eCrTe70p5Kp4uKGWZVBDLj-DjpzCS5ZTBODGwSiE4LQ&vr=3)  &nbsp;  [V2](https://www.jianguoyun.com/c/dl-file/checkpoint/MASNet_somethingv2_resnet50_segment16.pth.tar?dt=r2pbt4&kv=NjU3Nzg2ODQ0QHFxLmNvbQ&sd=cih0q&ud=1JKUe7Ne8ntJkNPSlkHm_-Pz22R4V7RRDINmgrorzpg&vr=3)
+MAS-ResNet50_EN  | (8+16) x 1 x 1 | 101 | 54.5%  | 65.1%  | [Ensemble](https://www.jianguoyun.com/#/sandbox/140b2aa/253df5a58156a857/%2FEnsemble)
 
 #### 3-Crops & 2-Clips
 Model| Frames x Crops x Clips |GFLOPs |V1-Top1 |V2-Top1| 
