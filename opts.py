@@ -28,6 +28,8 @@ parser.add_argument('--lr_steps', default=[30, 40, 50, 60], type=float, nargs="+
                     metavar='LRSteps', help='epochs to decay learning rate by 10')
 parser.add_argument('--dropout', '--dp', default=0.5, type=float,
                     metavar='dp', help='dropout ratio')
+parser.add_argument('--warmup', type=int, default=0,
+                    help='number of warmup epochs (default: 0)')
 
 #========================= Optimizer Configs ==========================
 parser.add_argument('--momentum', default=0.9, type=float, metavar='M',

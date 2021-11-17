@@ -407,33 +407,32 @@ class AverageMeter(object):
 def adjust_learning_rate(optimizer, epoch, lr_type, lr_steps):
 	"""Sets the learning rate to the initial LR decayed by 10 """
 	#print(lr_type)
-	if lr_type == 'step_lr':
-		decay = 0.1 ** (sum(epoch >= np.array(lr_steps)))
-		lr = args.lr * decay
-		decay = args.weight_decay
-
-	elif lr_type == 'MAS_lr':
-		if len(lr_steps)==4:
-			decay = 0.1 ** (sum(epoch >= np.array(lr_steps[:2])))
-			lr = args.lr * decay
-			if epoch >= np.array(lr_steps[2]):
-				lr = lr * 0.5
-				if epoch >= np.array(lr_steps[3]):
-					lr = lr * 0.2
-		else:
+	if epoch < args.warmup:
+		lr = args.lr * (epoch + 1) / args.warmup
+	else:
+		if lr_type == 'step_lr':
 			decay = 0.1 ** (sum(epoch >= np.array(lr_steps)))
 			lr = args.lr * decay
-		decay = args.weight_decay
 
-	elif lr_type == 'cos_lr':
-		import math
-		lr = 0.5 * args.lr * (1 + math.cos(math.pi * epoch / args.epochs))
-		decay = args.weight_decay
-	else:
-		raise NotImplementedError
+		elif lr_type == 'MAS_lr':
+			if len(lr_steps)==4:
+				decay = 0.1 ** (sum(epoch >= np.array(lr_steps[:2])))
+				lr = args.lr * decay
+				if epoch >= np.array(lr_steps[2]):
+					lr = lr * 0.5
+					if epoch >= np.array(lr_steps[3]):
+						lr = lr * 0.2
+			else:
+				decay = 0.1 ** (sum(epoch >= np.array(lr_steps)))
+				lr = args.lr * decay
+		elif lr_type == 'cos_lr':
+			import math
+			lr = 0.5 * args.lr * (1 + math.cos(math.pi * epoch / args.epochs))
+		else:
+			raise NotImplementedError
 	for param_group in optimizer.param_groups:
 		param_group['lr'] = lr * param_group['lr_mult']
-		param_group['weight_decay'] = decay * param_group['decay_mult']
+		param_group['weight_decay'] = param_group['weight_decay'] * param_group['decay_mult']
 
 def accuracy(output, target, topk=(1,)):
 	"""Computes the precision@k for the specified values of k"""
