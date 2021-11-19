@@ -8,8 +8,8 @@ class TemporalModel(nn.Module):
     def __init__(self, num_class, num_segments, base_model="MASNet",
                  backbone='resnet50',new_length=None,
                  consensus_type='avg',before_softmax=True,
-                 dropout = 0.8,img_feature_dim=256,
-                 full_res=False, partial_bn= True,
+                 dropout = 0.5,img_feature_dim=256,
+                 full_res=False, partial_bn= False,
                  fc_lr5=False,print_spec=True,
                  ):
 
@@ -19,6 +19,7 @@ class TemporalModel(nn.Module):
         self.backbone = backbone
         self.dropout = dropout
         self.before_softmax = before_softmax
+
         self.reshape = True
         self.full_res = full_res
 
@@ -53,7 +54,7 @@ class TemporalModel(nn.Module):
 
         self._prepare_base_model(backbone)
 
-        feature_dim = self._prepare_tsn(num_class)
+        self.feature_dim = self._prepare_tsn(num_class)
 
         self.consensus = ConsensusModule(consensus_type)
 
@@ -65,14 +66,19 @@ class TemporalModel(nn.Module):
         if partial_bn:
             self.partialBN(True)
 
+    def partialBN(self, enable):
+        self._enable_pbn = enable
 
     def _prepare_tsn(self, num_class):
+        std = 0.001
         feature_dim = getattr(self.base_model,
                               self.base_model.last_layer_name).in_features
         if self.dropout == 0:
             setattr(self.base_model, self.base_model.last_layer_name,
                     nn.Linear(feature_dim, num_class))
             self.new_fc = None
+            normal_(getattr(self.base_model, self.base_model.last_layer_name).weight, 0, std)
+            constant_(getattr(self.base_model, self.base_model.last_layer_name).bias, 0)
         else:
             setattr(self.base_model, self.base_model.last_layer_name,
                     nn.Dropout(p=self.dropout))
@@ -82,19 +88,9 @@ class TemporalModel(nn.Module):
             else:
                 # the default consensus types in TSN
                 self.new_fc = nn.Linear(feature_dim, num_class)
+            normal_(self.new_fc.weight, 0, std)
+            constant_(self.new_fc.bias, 0)
 
-        std = 0.001
-        if self.new_fc is None:
-            normal_(
-                getattr(self.base_model,
-                        self.base_model.last_layer_name).weight, 0, std)
-            constant_(
-                getattr(self.base_model, self.base_model.last_layer_name).bias,
-                0)
-        else:
-            if hasattr(self.new_fc, 'weight'):
-                normal_(self.new_fc.weight, 0, std)
-                constant_(self.new_fc.bias, 0)
         return feature_dim
 
 
@@ -107,19 +103,26 @@ class TemporalModel(nn.Module):
             self.base_model = getattr(ops.MASNet, backbone)(self.num_segments)
 
             self.base_model.last_layer_name = 'fc'  # 将模型最后一层的名称改为'fc'
-            self.input_size = 224
+
             if self.full_res:
                 self.input_size = 256
+            else:
+                self.input_size = 224
+
             self.init_crop_size = 256
             self.input_mean = [0.485, 0.456, 0.406]
             self.input_std = [0.229, 0.224, 0.225]
 
-            self.base_model.avgpool = nn.AdaptiveAvgPool2d(1)
+            #self.base_model.avgpool = nn.AdaptiveAvgPool2d(1)
 
+            # if backbone == 'resnet18' or backbone == 'resnet34':
+            #     self.feature_dim = 512
+            # else:
+            #     self.feature_dim = 2048
         else:
             raise ValueError('Unknown model: {}'.format(backbone))
 
-    def train(self, mode=True):
+    def train(self, mode=False):
         """
         Override the default train() to freeze the BN parameters
         :return:
@@ -137,8 +140,7 @@ class TemporalModel(nn.Module):
                         m.weight.requires_grad = False
                         m.bias.requires_grad = False
 
-    def partialBN(self, enable):
-        self._enable_pbn = enable
+
 
 
     def get_optim_policies(self):
@@ -235,6 +237,7 @@ class TemporalModel(nn.Module):
         if not no_reshape:
             sample_len = 3 * self.new_length  #[32,3,224,224]
             base_out = self.base_model(input.view((-1, sample_len) + input.size()[-2:]))  #[4*8,2048]
+
         else:
             base_out = self.base_model(input)
 
